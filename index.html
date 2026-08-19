@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Interaktives Quiz zur stückweise gleichförmigen Bewegung" />
+  <title>Stückweise gleichförmige Bewegung</title>
+  <script>window.GG_APP_VERSION = '20260819.3';</script>
+  <link rel="stylesheet" href="css/styles.css?v=20260819.3" />
+  <script src="js/mathjax-config.js?v=20260819.3"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
+  <script defer src="js/motion-core.js?v=20260819.3"></script>
+  <script defer src="js/graph-editor.js?v=20260819.3"></script>
+  <script defer src="js/app.js?v=20260819.3"></script>
+</head>
+<body>
+  <div id="languageSwitcher" class="language-switcher" role="group" aria-label="Sprachauswahl">
+    <button id="langDeButton" class="language-option is-active" type="button" aria-pressed="true" aria-label="Deutsch" title="Deutsch">
+      <span aria-hidden="true">🇩🇪</span>
+    </button>
+    <button id="langEnButton" class="language-option" type="button" aria-pressed="false" aria-label="English" title="English">
+      <span aria-hidden="true">🇬🇧</span>
+    </button>
+    <button id="langFrButton" class="language-option" type="button" aria-pressed="false" aria-label="Français" title="Français">
+      <span aria-hidden="true">🇫🇷</span>
+    </button>
+  </div>
+
+  <main>
+    <h1 id="mainHeading">Stückweise gleichförmige Bewegung</h1>
+
+    <section id="introScreen" class="screen intro-screen">
+      <div class="panel intro-panel">
+        <p id="introLead" class="intro-lead">Übe den Zusammenhang zwischen Bewegungsbeschreibung, Orts-Zeit-Diagramm und Geschwindigkeits-Zeit-Diagramm.</p>
+
+        <fieldset class="option-fieldset">
+          <legend id="modeLegend">Wähle den Aufgabentyp</legend>
+          <div id="modeChoiceList" class="mode-choice-list">
+            <button id="modeDescriptionButton" class="mode-choice is-selected" type="button" data-mode="description" aria-pressed="true">
+              <span id="modeDescriptionTitle" class="mode-choice-title">Beschreibung umsetzen</span>
+              <span id="modeDescriptionDescription" class="mode-choice-description">Zeichne aus einem Text ein oder beide Bewegungsdiagramme.</span>
+            </button>
+            <button id="modePositionToVelocityButton" class="mode-choice" type="button" data-mode="position-to-velocity" aria-pressed="false">
+              <span id="modePositionToVelocityTitle" class="mode-choice-title">Ort → Geschwindigkeit</span>
+              <span id="modePositionToVelocityDescription" class="mode-choice-description">Leite aus dem Ortsdiagramm die Geschwindigkeit ab.</span>
+            </button>
+            <button id="modeVelocityToPositionButton" class="mode-choice" type="button" data-mode="velocity-to-position" aria-pressed="false">
+              <span id="modeVelocityToPositionTitle" class="mode-choice-title">Geschwindigkeit → Ort</span>
+              <span id="modeVelocityToPositionDescription" class="mode-choice-description">Konstruiere mit dem angegebenen Anfangsort das Ortsdiagramm.</span>
+            </button>
+            <button id="modeMixedButton" class="mode-choice" type="button" data-mode="mixed" aria-pressed="false">
+              <span id="modeMixedTitle" class="mode-choice-title">Gemischtes Quiz</span>
+              <span id="modeMixedDescription" class="mode-choice-description">Wechsle zwischen allen fünf Aufgabenvarianten.</span>
+            </button>
+          </div>
+        </fieldset>
+
+        <fieldset id="descriptionTargetFieldset" class="option-fieldset compact-fieldset">
+          <legend id="descriptionTargetLegend">Zu zeichnende Diagramme</legend>
+          <div class="segmented-options">
+            <label class="segmented-option">
+              <input id="descriptionTargetPosition" type="radio" name="descriptionTarget" value="position" />
+              <span id="descriptionTargetPositionLabel">Ort</span>
+            </label>
+            <label class="segmented-option">
+              <input id="descriptionTargetVelocity" type="radio" name="descriptionTarget" value="velocity" />
+              <span id="descriptionTargetVelocityLabel">Geschwindigkeit</span>
+            </label>
+            <label class="segmented-option">
+              <input id="descriptionTargetBoth" type="radio" name="descriptionTarget" value="both" checked />
+              <span id="descriptionTargetBothLabel">Beide</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset class="option-fieldset compact-fieldset">
+          <legend id="difficultyLegend">Schwierigkeit</legend>
+          <div class="difficulty-options">
+            <label class="difficulty-option">
+              <input id="difficultyBasic" type="radio" name="difficulty" value="basic" />
+              <span>
+                <strong id="difficultyBasicTitle">Basis</strong>
+                <small id="difficultyBasicDescription">Zwei Bewegungsabschnitte, Anfangsort null</small>
+              </span>
+            </label>
+            <label class="difficulty-option">
+              <input id="difficultyStandard" type="radio" name="difficulty" value="standard" checked />
+              <span>
+                <strong id="difficultyStandardTitle">Standard</strong>
+                <small id="difficultyStandardDescription">Drei Abschnitte mit beliebigem Anfangsort</small>
+              </span>
+            </label>
+          </div>
+        </fieldset>
+
+        <button id="startSelectedQuizButton" class="primary-button intro-start-button" type="button">Quiz starten</button>
+      </div>
+    </section>
+
+    <section id="quizScreen" class="screen quiz-screen hidden">
+      <div class="quiz-top-row">
+        <button id="homeButton" class="secondary-button" type="button">Zur Startseite</button>
+        <button id="nextButton" class="primary-button" type="button" disabled>Nächste Aufgabe</button>
+      </div>
+
+      <div class="panel quiz-panel">
+        <div class="task-status-row">
+          <div id="taskCounter" class="task-counter">Aufgabe 1/10</div>
+          <div id="scoreCounter" class="score-counter" aria-live="polite">Punkte: 0/0</div>
+          <div id="timeCounter" class="time-counter">Zeit: 00:00</div>
+        </div>
+
+        <div id="taskPromptArea" class="task-prompt-area hidden">
+          <div id="taskTypeBadge" class="task-type-badge"></div>
+          <p id="taskQuestion" class="task-question mathjax-content"></p>
+          <div id="motionDescription" class="motion-description mathjax-content hidden"></div>
+        </div>
+
+        <div id="diagramStack" class="diagram-stack">
+          <section id="positionDiagramPanel" class="diagram-card hidden" aria-labelledby="positionDiagramTitle">
+            <div class="diagram-card-header">
+              <h2 id="positionDiagramTitle">Orts-Zeit-Diagramm</h2>
+              <span id="positionDiagramRole" class="diagram-role-badge">Zeichnen</span>
+            </div>
+            <div id="positionGraph" class="graph-host"></div>
+            <div id="positionToolbar" class="diagram-toolbar hidden">
+              <button id="positionUndoButton" class="tool-button" type="button">Letzten Abschnitt rückgängig</button>
+              <button id="positionClearButton" class="tool-button" type="button">Zeichnung löschen</button>
+            </div>
+          </section>
+
+          <section id="velocityDiagramPanel" class="diagram-card hidden" aria-labelledby="velocityDiagramTitle">
+            <div class="diagram-card-header">
+              <h2 id="velocityDiagramTitle">Geschwindigkeits-Zeit-Diagramm</h2>
+              <span id="velocityDiagramRole" class="diagram-role-badge">Zeichnen</span>
+            </div>
+            <div id="velocityGraph" class="graph-host"></div>
+            <div id="velocityToolbar" class="diagram-toolbar hidden">
+              <button id="velocityUndoButton" class="tool-button" type="button">Letzten Abschnitt rückgängig</button>
+              <button id="velocityClearButton" class="tool-button" type="button">Zeichnung löschen</button>
+            </div>
+          </section>
+        </div>
+
+        <div id="roundStartPanel" class="round-start-panel">
+          <p id="roundStartText">Die erste Aufgabe ist bereit. Die Zeit beginnt erst mit einem Klick auf Start.</p>
+          <button id="beginRoundButton" class="primary-button" type="button">Start</button>
+        </div>
+
+        <div id="answerArea" class="answer-area hidden">
+          <p id="drawingInstructions" class="drawing-instructions">Ziehe mit Maus oder Stift von einem Gitterpunkt zum nächsten. Du kannst auch zwei Punkte nacheinander anklicken. Die Endpunkte rasten exakt ein.</p>
+
+          <div id="distanceAnswerGroup" class="distance-answer-group hidden">
+            <label id="distanceAnswerLabel" for="distanceInput">Berechne zusätzlich die insgesamt zurückgelegte Strecke.</label>
+            <div class="distance-input-row">
+              <span class="mathjax-content" aria-hidden="true">\(s_{\mathrm{ges}}=\)</span>
+              <input id="distanceInput" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="distanceInputUnit" />
+              <span id="distanceInputUnit" class="mathjax-content">\(\mathrm{m}\)</span>
+            </div>
+          </div>
+
+          <button id="checkAnswerButton" class="primary-button check-button" type="button">Antwort prüfen</button>
+        </div>
+
+        <div id="feedbackPanel" class="feedback-panel hidden" aria-live="polite">
+          <h2 id="feedbackHeading"></h2>
+          <div id="feedbackDetails"></div>
+        </div>
+
+        <details id="solutionPanel" class="solution-panel hidden">
+          <summary id="solutionSummary">Musterlösung und Erklärung</summary>
+          <div id="solutionContent" class="solution-content mathjax-content"></div>
+        </details>
+      </div>
+    </section>
+
+    <section id="resultScreen" class="screen result-screen hidden">
+      <div class="panel result-panel">
+        <h2 id="resultHeading">Ergebnis</h2>
+        <p id="resultScore" class="result-score"></p>
+        <p id="resultTime" class="result-time"></p>
+        <div class="result-actions">
+          <button id="restartButton" class="primary-button" type="button">Neues Quiz starten</button>
+          <button id="resultHomeButton" class="secondary-button" type="button">Zur Startseite</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <span id="versionBadge" class="version-badge">v2026.08.19.3</span>
+  </footer>
+</body>
+</html>
