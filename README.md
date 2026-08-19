@@ -2,7 +2,9 @@
 
 Interactive static quiz for piecewise uniform motion in a one-dimensional coordinate system. Students translate written motion descriptions and convert between position–time and velocity–time graphs by drawing exact line segments on a snapping grid.
 
-The project is currently local and has not yet been connected to a GitHub repository or public GitHub Pages URL.
+Repository: <https://github.com/georg184/motion>
+
+Live app: <https://georg184.github.io/motion/>
 
 ## Learning Model
 
@@ -153,4 +155,5 @@ Browser verification should cover:
 
 ## GitHub Pages
 
-The included workflow is ready for a future repository using the `main` branch. Before publication, connect the project to its intended GitHub repository, enable GitHub Pages through Actions, push the validated commit, monitor the workflow to a terminal result, and verify the served `GG_APP_VERSION`.
+The workflow publishes the validated `main` branch through GitHub Pages. The
+public deployment is available at <https://georg184.github.io/motion/>.
