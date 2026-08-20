@@ -5,7 +5,7 @@
   if (typeof module === 'object' && module.exports) module.exports = api;
   if (root) root.GGMotionGraphEditor = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this, function() {
-  const VERSION = '20260820.1';
+  const VERSION = '20260820.2';
   const SVG_NS = 'http://www.w3.org/2000/svg';
   const VIEWBOX = Object.freeze({ width: 760, height: 360 });
   const PLOT = Object.freeze({ left: 70, right: 728, top: 24, bottom: 306 });

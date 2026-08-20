@@ -1,6 +1,6 @@
 'use strict';
 
-const APP_VERSION = '20260820.1';
+const APP_VERSION = '20260820.2';
 const QUESTIONS_PER_ROUND = 10;
 const TIMER_UPDATE_INTERVAL_MS = 250;
 const LANGUAGE_STORAGE_KEY = 'motion-language';
@@ -62,8 +62,10 @@ const TEXT = {
     notation: {
       title: 'Notation: Ort, Geschwindigkeit und Absolutgeschwindigkeit',
       vectors: 'Den Ort schreiben wir als Vektor \\(\\vec{x}\\), die Geschwindigkeit als Vektor \\(\\vec{v}\\). Die Absolutgeschwindigkeit \\(v=\\lvert\\vec{v}\\rvert\\) ist der Betrag beziehungsweise die Länge der Geschwindigkeit. Sie hat kein Vektorsymbol und kann nicht negativ sein.',
-      dimensions: 'In einer Dimension lassen sich \\(\\vec{v}\\) und \\(v\\) durch reelle Zahlen darstellen: Das Vorzeichen von \\(\\vec{v}\\) gibt die Orientierung an, während \\(v\\ge 0\\) gilt. In zwei Dimensionen ist \\(\\vec{v}=(v_x,v_y)\\) ein Vektor – mathematisch ein geordnetes Zahlenpaar – und \\(v=\\sqrt{v_x^2+v_y^2}\\) seine Länge.',
-      descriptions: 'Die Bewegungstexte verwenden beide Formen: Entweder steht dort die vorzeichenbehaftete Geschwindigkeit \\(\\vec{v}\\); dann wird keine Orientierung zusätzlich genannt. Oder es steht dort die Absolutgeschwindigkeit \\(v\\); dann wird die positive oder negative \\(x\\)-Orientierung angegeben.'
+      oneDimension: 'Im Eindimensionalen lassen sich \\(\\vec{v}\\) und \\(v\\) durch reelle Zahlen darstellen: Das Vorzeichen von \\(\\vec{v}\\) gibt die Orientierung an, während \\(v\\ge 0\\) gilt.',
+      twoDimensions: 'Im Zweidimensionalen ist \\(\\vec{v}=(v_x,v_y)\\) ein Vektor – mathematisch ein geordnetes Zahlenpaar – und \\(v=\\sqrt{v_x^2+v_y^2}\\) seine Länge.',
+      footnoteAria: 'Fußnote 1: Hinweis zum Zweidimensionalen',
+      descriptions: 'Die Texte zur Beschreibung der Bewegung verwenden beide Formen: Entweder steht dort die vorzeichenbehaftete Geschwindigkeit \\(\\vec{v}\\); dann wird keine Orientierung zusätzlich genannt. Oder es steht dort die Absolutgeschwindigkeit \\(v\\); dann wird die positive oder negative \\(x\\)-Orientierung angegeben.'
     },
     modeLegend: 'Wähle den Aufgabentyp',
     modes: {
@@ -179,8 +181,10 @@ const TEXT = {
     notation: {
       title: 'Notation: position, velocity, and speed',
       vectors: 'We write position as the vector \\(\\vec{x}\\) and velocity as the vector \\(\\vec{v}\\). The speed \\(v=\\lvert\\vec{v}\\rvert\\) is the magnitude or length of the velocity. It has no vector arrow and cannot be negative.',
-      dimensions: 'In one dimension, \\(\\vec{v}\\) and \\(v\\) can both be represented by real numbers: the sign of \\(\\vec{v}\\) specifies the orientation, whereas \\(v\\ge 0\\). In two dimensions, \\(\\vec{v}=(v_x,v_y)\\) is a vector – mathematically, an ordered pair of numbers – and \\(v=\\sqrt{v_x^2+v_y^2}\\) is its length.',
-      descriptions: 'The motion descriptions use both forms: they either state the signed velocity \\(\\vec{v}\\), in which case no orientation is added, or they state the speed \\(v\\), in which case the positive or negative \\(x\\)-orientation is specified.'
+      oneDimension: 'In the one-dimensional case, \\(\\vec{v}\\) and \\(v\\) can both be represented by real numbers: the sign of \\(\\vec{v}\\) specifies the orientation, whereas \\(v\\ge 0\\).',
+      twoDimensions: 'In the two-dimensional case, \\(\\vec{v}=(v_x,v_y)\\) is a vector – mathematically, an ordered pair of numbers – and \\(v=\\sqrt{v_x^2+v_y^2}\\) is its length.',
+      footnoteAria: 'Footnote 1: note on the two-dimensional case',
+      descriptions: 'The texts describing the motion use both forms: they either state the signed velocity \\(\\vec{v}\\), in which case no orientation is added, or they state the speed \\(v\\), in which case the positive or negative \\(x\\)-orientation is specified.'
     },
     modeLegend: 'Choose the task type',
     modes: {
@@ -296,8 +300,10 @@ const TEXT = {
     notation: {
       title: 'Notation : position, vitesse et vitesse absolue',
       vectors: 'Nous écrivons la position comme le vecteur \\(\\vec{x}\\) et la vitesse comme le vecteur \\(\\vec{v}\\). La vitesse absolue, ou célérité, \\(v=\\lvert\\vec{v}\\rvert\\) est la norme ou la longueur de la vitesse. Elle ne porte pas de flèche vectorielle et ne peut pas être négative.',
-      dimensions: 'En une dimension, \\(\\vec{v}\\) et \\(v\\) peuvent être représentées par des nombres réels : le signe de \\(\\vec{v}\\) indique l’orientation, tandis que \\(v\\ge 0\\). En deux dimensions, \\(\\vec{v}=(v_x,v_y)\\) est un vecteur – mathématiquement, un couple ordonné de nombres – et \\(v=\\sqrt{v_x^2+v_y^2}\\) est sa longueur.',
-      descriptions: 'Les descriptions du mouvement utilisent les deux formes : soit elles donnent la vitesse signée \\(\\vec{v}\\), sans ajouter d’orientation, soit elles donnent la vitesse absolue \\(v\\), en précisant alors l’orientation positive ou négative de \\(x\\).'
+      oneDimension: 'Dans le cas unidimensionnel, \\(\\vec{v}\\) et \\(v\\) peuvent être représentées par des nombres réels : le signe de \\(\\vec{v}\\) indique l’orientation, tandis que \\(v\\ge 0\\).',
+      twoDimensions: 'Dans le cas bidimensionnel, \\(\\vec{v}=(v_x,v_y)\\) est un vecteur – mathématiquement, un couple ordonné de nombres – et \\(v=\\sqrt{v_x^2+v_y^2}\\) est sa longueur.',
+      footnoteAria: 'Note 1 : remarque sur le cas bidimensionnel',
+      descriptions: 'Les textes décrivant le mouvement utilisent les deux formes : soit ils donnent la vitesse signée \\(\\vec{v}\\), sans ajouter d’orientation, soit ils donnent la vitesse absolue \\(v\\), en précisant alors l’orientation positive ou négative de \\(x\\).'
     },
     modeLegend: 'Choisis le type d’exercice',
     modes: {
@@ -432,6 +438,10 @@ const controls = {
     title: byId('notationTitle'),
     vectors: byId('notationVectors'),
     dimensions: byId('notationDimensions'),
+    oneDimension: byId('notationOneDimension'),
+    footnote: byId('dimensionFootnote'),
+    footnoteTrigger: byId('dimensionFootnoteTrigger'),
+    footnoteTooltip: byId('dimensionFootnoteTooltip'),
     descriptions: byId('notationDescriptions')
   },
   modeLegend: byId('modeLegend'),
@@ -552,6 +562,10 @@ function setText(element, value) {
   element.textContent = value;
 }
 
+function setDimensionFootnoteOpen(open) {
+  controls.notation.footnote.classList.toggle('is-open', Boolean(open));
+}
+
 function currentTask() {
   return state.activeRound ? state.activeRound.tasks[state.activeRound.index] : null;
 }
@@ -643,9 +657,12 @@ function applyLanguage() {
   });
   setText(controls.introLead, text.introLead);
   clearMath([controls.notation.panel]);
+  setDimensionFootnoteOpen(false);
   setText(controls.notation.title, text.notation.title);
   controls.notation.vectors.innerHTML = text.notation.vectors;
-  controls.notation.dimensions.innerHTML = text.notation.dimensions;
+  controls.notation.oneDimension.innerHTML = text.notation.oneDimension;
+  controls.notation.footnoteTooltip.innerHTML = text.notation.twoDimensions;
+  controls.notation.footnoteTrigger.setAttribute('aria-label', text.notation.footnoteAria);
   controls.notation.descriptions.innerHTML = text.notation.descriptions;
   setText(controls.modeLegend, text.modeLegend);
   for (const [mode, elements] of Object.entries(controls.modeText)) {
@@ -1147,6 +1164,26 @@ Object.entries(controls.languageButtons).forEach(([language, button]) => {
     state.language = language;
     applyLanguage();
   });
+});
+
+controls.notation.footnoteTrigger.addEventListener('click', () => {
+  setDimensionFootnoteOpen(!controls.notation.footnote.classList.contains('is-open'));
+});
+controls.notation.footnoteTrigger.addEventListener('keydown', event => {
+  if (event.key !== 'Escape') return;
+  event.preventDefault();
+  setDimensionFootnoteOpen(false);
+  controls.notation.footnoteTrigger.blur();
+});
+controls.notation.footnoteTrigger.addEventListener('blur', () => {
+  setDimensionFootnoteOpen(false);
+});
+document.addEventListener('pointerdown', event => {
+  if (controls.notation.footnote.contains(event.target)) return;
+  setDimensionFootnoteOpen(false);
+  if (document.activeElement === controls.notation.footnoteTrigger) {
+    controls.notation.footnoteTrigger.blur();
+  }
 });
 
 controls.startSelectedQuizButton.addEventListener('click', () => startSelectedQuiz(false));

@@ -53,8 +53,9 @@ All interval boundaries, velocities, and initial positions are integers. The gen
 ## Description Contract
 
 The start screen explains the distinction between signed velocity
-\(\vec{v}\) and speed \(v=\lvert\vec{v}\rvert\), both in one dimension and
-for a two-dimensional vector \(\vec{v}=(v_x,v_y)\).
+\(\vec{v}\) and speed \(v=\lvert\vec{v}\rvert\) in the one-dimensional case.
+The comparison with a two-dimensional vector \(\vec{v}=(v_x,v_y)\) appears in
+an accessible footnote tooltip that opens by hover, keyboard focus, or tap.
 
 Generated motion descriptions alternate systematically between two equivalent
 forms:
@@ -125,7 +126,7 @@ The selected language is stored in `sessionStorage` and remains shared across al
 
 ## Cache And Version Safety
 
-Current application version: `20260820.1`.
+Current application version: `20260820.2`.
 
 The same version must appear in:
 

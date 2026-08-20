@@ -156,6 +156,65 @@ p {
   margin-bottom: 0;
 }
 
+.notation-dimensions {
+  position: relative;
+}
+
+.dimension-footnote {
+  display: inline;
+}
+
+.footnote-trigger {
+  margin-left: 0.12em;
+  padding: 0 0.28em;
+  border: 0;
+  border-radius: 5px;
+  color: var(--primary-dark);
+  background: transparent;
+  font-size: 0.72em;
+  font-weight: 800;
+  line-height: 1.15;
+  text-decoration: underline;
+  text-underline-offset: 0.12em;
+  vertical-align: super;
+  cursor: help;
+}
+
+.footnote-trigger:hover {
+  background: #dce7ff;
+}
+
+.footnote-tooltip {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 9px);
+  left: 50%;
+  width: min(620px, calc(100% - 12px));
+  padding: 12px 14px;
+  border: 1px solid #6f83aa;
+  border-radius: 10px;
+  color: #fff;
+  background: #27364f;
+  box-shadow: 0 10px 24px rgba(23, 32, 51, 0.24);
+  font-size: 0.92rem;
+  font-weight: 500;
+  line-height: 1.48;
+  text-align: left;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -4px);
+  transition: opacity 120ms ease, transform 120ms ease, visibility 120ms ease;
+}
+
+.footnote-trigger:hover + .footnote-tooltip,
+.footnote-trigger:focus-visible + .footnote-tooltip,
+.dimension-footnote.is-open .footnote-tooltip {
+  visibility: visible;
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
 .option-fieldset {
   min-width: 0;
   margin: 0 0 24px;

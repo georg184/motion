@@ -58,6 +58,10 @@ for (const id of [
   'notationTitle',
   'notationVectors',
   'notationDimensions',
+  'notationOneDimension',
+  'dimensionFootnote',
+  'dimensionFootnoteTrigger',
+  'dimensionFootnoteTooltip',
   'notationDescriptions',
   'quizScreen',
   'resultScreen',
@@ -82,6 +86,12 @@ assert.match(editorSource, /Math\.round\(value\)/);
 assert.match(editorSource, /event\.key === 'ArrowLeft'/);
 assert.match(editorSource, /event\.key === ' ' \|\| event\.key === 'Enter'/);
 assert.match(cssSource, /touch-action: none/);
+assert.match(indexSource, /aria-describedby="dimensionFootnoteTooltip"/);
+assert.match(indexSource, /id="dimensionFootnoteTooltip"[^>]*role="tooltip"/);
+assert.match(cssSource, /\.footnote-trigger:focus-visible \+ \.footnote-tooltip/);
+assert.match(cssSource, /\.dimension-footnote\.is-open \.footnote-tooltip/);
+assert.match(appSource, /footnoteTrigger\.addEventListener\('click'/);
+assert.match(appSource, /event\.key !== 'Escape'/);
 
 assert.match(coreSource, /'vertical-segment'/);
 assert.match(coreSource, /code: 'non-horizontal-velocity'/);
@@ -92,6 +102,10 @@ assert.match(coreSource, /absoluteSpeed: 'absolute-speed'/);
 assert.match(appSource, /Ein Geschwindigkeitssprung wird nicht durch eine senkrechte Linie verbunden/);
 assert.match(appSource, /A velocity jump is not connected by a vertical line/);
 assert.match(appSource, /Un saut de vitesse n’est pas relié par une ligne verticale/);
+assert.match(appSource, /Im Eindimensionalen lassen sich/);
+assert.match(appSource, /Im Zweidimensionalen ist/);
+assert.match(appSource, /Die Texte zur Beschreibung der Bewegung verwenden beide Formen/);
+assert.doesNotMatch(indexSource + appSource, /Bewegungstexte/);
 assert.ok(indexSource.includes('\\(v=\\lvert\\vec{v}\\rvert\\)'));
 assert.match(appSource, /\\\\vec\{v\}=\\\\frac\{\\\\Delta\\\\vec\{x\}\}\{\\\\Delta t\}/);
 assert.match(appSource, /\\\\vec\{x\}_\{i\+1\}=\\\\vec\{x\}_i\+\\\\vec\{v\}_i/);
