@@ -42,18 +42,24 @@
     if (appWindow.MathJax && appWindow.MathJax.startup) {
       await appWindow.MathJax.startup.promise;
     }
+    await waitFor(
+      () => appDocument.querySelectorAll('#notationNote mjx-container').length >= 8,
+      'intro notation MathJax'
+    );
 
     const report = {};
     report.intro = {
       language: appDocument.documentElement.lang,
       version: appWindow.GG_APP_VERSION,
       visible: !appDocument.getElementById('introScreen').classList.contains('hidden'),
-      overflow: appDocument.documentElement.scrollWidth > appWindow.innerWidth
+      overflow: appDocument.documentElement.scrollWidth > appWindow.innerWidth,
+      notationMath: appDocument.querySelectorAll('#notationNote mjx-container').length
     };
     assert(report.intro.language === 'de', 'The app did not start in German.');
-    assert(report.intro.version === '20260819.3', 'The browser loaded the wrong app version.');
+    assert(report.intro.version === '20260820.1', 'The browser loaded the wrong app version.');
     assert(report.intro.visible, 'The intro screen is not visible.');
     assert(!report.intro.overflow, 'The desktop intro has horizontal overflow.');
+    assert(report.intro.notationMath >= 8, 'The intro notation was not rendered by MathJax.');
 
     appDocument.getElementById('startSelectedQuizButton').click();
     await waitFor(
@@ -81,20 +87,24 @@
     report.started = {
       editableCount: appDocument.querySelectorAll('.motion-graph.is-editable').length,
       hasMath: appDocument.querySelectorAll('#taskPromptArea mjx-container').length > 0,
+      hasVectorMath: Boolean(appDocument.querySelector('#taskPromptArea mjx-over')),
       answerVisible: !appDocument.getElementById('answerArea').classList.contains('hidden')
     };
     assert(report.started.editableCount === 2, 'Both answer graphs must become editable.');
     assert(report.started.hasMath, 'The dynamic question was not rendered by MathJax.');
+    assert(report.started.hasVectorMath, 'The dynamic prompt has no vector notation.');
     assert(report.started.answerVisible, 'The answer controls are hidden after Start.');
 
     appDocument.getElementById('langEnButton').click();
     await waitFor(() => appDocument.documentElement.lang === 'en', 'English localization');
     report.english = {
       heading: appDocument.getElementById('mainHeading').textContent,
+      notationTitle: appDocument.getElementById('notationTitle').textContent,
       svgCount: appDocument.querySelectorAll('.motion-graph-svg').length,
       selectedLanguage: appWindow.GGMotionApp.getState().language
     };
     assert(report.english.heading.includes('Piecewise'), 'The English heading is missing.');
+    assert(report.english.notationTitle.includes('velocity'), 'The English notation is missing.');
     assert(report.english.svgCount === 2, 'Changing language destroyed a graph.');
     assert(report.english.selectedLanguage === 'en', 'The shared language state did not update.');
 

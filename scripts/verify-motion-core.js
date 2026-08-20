@@ -19,6 +19,16 @@ const model = core.createMotionModel(-2, [
   { duration: 2, velocity: 0 },
   { duration: 5, velocity: -1 }
 ]);
+const orientationTerms = {
+  de: 'Orientierung',
+  en: 'orientation',
+  fr: 'orientation'
+};
+const redundantDirectionTerms = {
+  de: ['Orientierung', 'Richtung', 'positiver', 'negativer'],
+  en: ['orientation', 'direction', 'positive', 'negative'],
+  fr: ['orientation', 'sens positif', 'sens négatif']
+};
 
 assert.equal(model.initialPosition, -2);
 assert.equal(model.finalPosition, -1);
@@ -49,9 +59,35 @@ assert.deepEqual(core.velocitySegments(model), [
 assert.ok(core.velocitySegments(model).every(segment => segment.value1 === segment.value2));
 
 for (const language of core.SUPPORTED_LANGUAGES) {
-  const description = core.describeMotion(model, language);
+  const description = core.describeMotion(
+    model,
+    language,
+    core.DESCRIPTION_STYLES.signedVelocity
+  );
   assert.equal(description.length, 4);
   assert.ok(description.every(paragraph => paragraph.includes('\\(')));
+  assert.ok(description[0].includes('\\vec{x}(0)'));
+  assert.ok(description[1].includes('\\vec{v}=+2'));
+  for (const term of redundantDirectionTerms[language]) {
+    assert.ok(!description[1].includes(term));
+  }
+  assert.ok(description[2].includes('\\vec{v}=0'));
+  assert.ok(description[3].includes('\\(v=1'));
+  assert.ok(!description[3].includes('\\vec{v}'));
+  assert.ok(description[3].includes(orientationTerms[language]));
+
+  const reversedDescription = core.describeMotion(
+    model,
+    language,
+    core.DESCRIPTION_STYLES.absoluteSpeed
+  );
+  assert.ok(reversedDescription[1].includes('\\(v=2'));
+  assert.ok(!reversedDescription[1].includes('\\vec{v}'));
+  assert.ok(reversedDescription[1].includes(orientationTerms[language]));
+  assert.ok(reversedDescription[3].includes('\\vec{v}=-1'));
+  for (const term of redundantDirectionTerms[language]) {
+    assert.ok(!reversedDescription[3].includes(term));
+  }
 }
 
 assert.equal(core.parseDistanceAnswer('11'), 11);
@@ -101,6 +137,16 @@ for (const [mode, target, expectedType] of modeCases) {
   assert.equal(tasks.length, 10);
   assert.equal(tasks.filter(task => task.distanceRequired).length, 5);
   assert.ok(tasks.every(task => task.type === expectedType));
+  if (tasks[0].requirements.hasDescription) {
+    assert.deepEqual(
+      tasks.map(task => task.descriptionStyle),
+      Array.from({ length: 10 }, (_, index) => index % 2 === 0
+        ? core.DESCRIPTION_STYLES.signedVelocity
+        : core.DESCRIPTION_STYLES.absoluteSpeed)
+    );
+  } else {
+    assert.ok(tasks.every(task => task.descriptionStyle === null));
+  }
 }
 
 const mixedTasks = core.createRoundTasks({
@@ -114,6 +160,17 @@ assert.equal(mixedTasks.filter(task => task.distanceRequired).length, 5);
 for (const taskType of core.ALL_TASK_TYPES) {
   assert.equal(mixedTasks.filter(task => task.type === taskType).length, 2);
 }
+assert.deepEqual(
+  mixedTasks
+    .filter(task => task.requirements.hasDescription)
+    .map(task => task.descriptionStyle),
+  Array.from(
+    { length: mixedTasks.filter(task => task.requirements.hasDescription).length },
+    (_, index) => index % 2 === 0
+      ? core.DESCRIPTION_STYLES.signedVelocity
+      : core.DESCRIPTION_STYLES.absoluteSpeed
+  )
+);
 for (const task of mixedTasks) {
   const graphs = {};
   if (task.requirements.answers.includes(core.GRAPH_TYPES.position)) {

@@ -54,6 +54,11 @@ assert.doesNotMatch(indexSource + appSource, /\.\.\/shared\//);
 
 for (const id of [
   'introScreen',
+  'notationNote',
+  'notationTitle',
+  'notationVectors',
+  'notationDimensions',
+  'notationDescriptions',
   'quizScreen',
   'resultScreen',
   'modeDescriptionButton',
@@ -82,11 +87,18 @@ assert.match(coreSource, /'vertical-segment'/);
 assert.match(coreSource, /code: 'non-horizontal-velocity'/);
 assert.match(coreSource, /Array\(count \/ 2\)\.fill\(true\)/);
 assert.match(coreSource, /Array\(count \/ 2\)\.fill\(false\)/);
+assert.match(coreSource, /signedVelocity: 'signed-velocity'/);
+assert.match(coreSource, /absoluteSpeed: 'absolute-speed'/);
 assert.match(appSource, /Ein Geschwindigkeitssprung wird nicht durch eine senkrechte Linie verbunden/);
 assert.match(appSource, /A velocity jump is not connected by a vertical line/);
 assert.match(appSource, /Un saut de vitesse n’est pas relié par une ligne verticale/);
-assert.match(appSource, /v=\\\\frac\{\\\\Delta x\}\{\\\\Delta t\}/);
-assert.match(appSource, /x_\{i\+1\}=x_i\+v_i/);
+assert.ok(indexSource.includes('\\(v=\\lvert\\vec{v}\\rvert\\)'));
+assert.match(appSource, /\\\\vec\{v\}=\\\\frac\{\\\\Delta\\\\vec\{x\}\}\{\\\\Delta t\}/);
+assert.match(appSource, /\\\\vec\{x\}_\{i\+1\}=\\\\vec\{x\}_i\+\\\\vec\{v\}_i/);
+assert.ok(appSource.includes("'\\\\(\\\\vec{x}(t)"));
+assert.ok(appSource.includes("'\\\\(\\\\vec{v}(t)"));
+assert.equal(appSource.includes("'\\\\(x(t)"), false);
+assert.equal(appSource.includes("'\\\\(v(t)"), false);
 
 for (const script of [
   'verify-javascript-syntax.js',

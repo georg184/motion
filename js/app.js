@@ -1,6 +1,6 @@
 'use strict';
 
-const APP_VERSION = '20260819.3';
+const APP_VERSION = '20260820.1';
 const QUESTIONS_PER_ROUND = 10;
 const TIMER_UPDATE_INTERVAL_MS = 250;
 const LANGUAGE_STORAGE_KEY = 'motion-language';
@@ -59,6 +59,12 @@ const TEXT = {
     heading: 'Stückweise gleichförmige Bewegung',
     languageSelectorAria: 'Sprachauswahl',
     introLead: 'Übe den Zusammenhang zwischen Bewegungsbeschreibung, Orts-Zeit-Diagramm und Geschwindigkeits-Zeit-Diagramm.',
+    notation: {
+      title: 'Notation: Ort, Geschwindigkeit und Absolutgeschwindigkeit',
+      vectors: 'Den Ort schreiben wir als Vektor \\(\\vec{x}\\), die Geschwindigkeit als Vektor \\(\\vec{v}\\). Die Absolutgeschwindigkeit \\(v=\\lvert\\vec{v}\\rvert\\) ist der Betrag beziehungsweise die Länge der Geschwindigkeit. Sie hat kein Vektorsymbol und kann nicht negativ sein.',
+      dimensions: 'In einer Dimension lassen sich \\(\\vec{v}\\) und \\(v\\) durch reelle Zahlen darstellen: Das Vorzeichen von \\(\\vec{v}\\) gibt die Orientierung an, während \\(v\\ge 0\\) gilt. In zwei Dimensionen ist \\(\\vec{v}=(v_x,v_y)\\) ein Vektor – mathematisch ein geordnetes Zahlenpaar – und \\(v=\\sqrt{v_x^2+v_y^2}\\) seine Länge.',
+      descriptions: 'Die Bewegungstexte verwenden beide Formen: Entweder steht dort die vorzeichenbehaftete Geschwindigkeit \\(\\vec{v}\\); dann wird keine Orientierung zusätzlich genannt. Oder es steht dort die Absolutgeschwindigkeit \\(v\\); dann wird die positive oder negative \\(x\\)-Orientierung angegeben.'
+    },
     modeLegend: 'Wähle den Aufgabentyp',
     modes: {
       description: {
@@ -108,8 +114,8 @@ const TEXT = {
       aria: (type, editable) => `${type === 'position' ? 'Orts-Zeit-Diagramm' : 'Geschwindigkeits-Zeit-Diagramm'} mit Gitter. ${editable ? 'Zeichne Geradensegmente mit Zeiger oder Tastatur.' : 'Vorgegebenes Diagramm.'}`,
       status: (type, point, pending) => {
         const coordinate = type === 'position'
-          ? `x = ${point.value} m`
-          : `v = ${point.value} m/s`;
+          ? `Ortsvektor x = ${point.value} m`
+          : `Geschwindigkeitsvektor v = ${point.value} m/s`;
         return `Fangpunkt: t = ${point.t} s, ${coordinate}${pending ? '; Anfangspunkt gewählt' : ''}`;
       }
     },
@@ -123,11 +129,11 @@ const TEXT = {
       'velocity-to-position': 'Geschwindigkeit → Ort'
     },
     questions: {
-      'text-to-position': () => 'Zeichne zur beschriebenen Bewegung das Orts-Zeit-Diagramm \\(x(t)\\).',
-      'text-to-velocity': () => 'Zeichne zur beschriebenen Bewegung das Geschwindigkeits-Zeit-Diagramm \\(v(t)\\).',
-      'text-to-both': () => 'Zeichne zur beschriebenen Bewegung sowohl \\(x(t)\\) als auch \\(v(t)\\).',
+      'text-to-position': () => 'Zeichne zur beschriebenen Bewegung das Orts-Zeit-Diagramm \\(\\vec{x}(t)\\).',
+      'text-to-velocity': () => 'Zeichne zur beschriebenen Bewegung das Geschwindigkeits-Zeit-Diagramm \\(\\vec{v}(t)\\).',
+      'text-to-both': () => 'Zeichne zur beschriebenen Bewegung sowohl \\(\\vec{x}(t)\\) als auch \\(\\vec{v}(t)\\).',
       'position-to-velocity': () => 'Lies die Steigungen des gegebenen Orts-Zeit-Diagramms ab und zeichne das zugehörige Geschwindigkeits-Zeit-Diagramm.',
-      'velocity-to-position': model => `Zeichne zum gegebenen Geschwindigkeits-Zeit-Diagramm das Orts-Zeit-Diagramm. Verwende \\(x(0)=${model.initialPosition}\\,\\mathrm{m}\\).`
+      'velocity-to-position': model => `Zeichne zum gegebenen Geschwindigkeits-Zeit-Diagramm das Orts-Zeit-Diagramm. Verwende \\(\\vec{x}(0)=${model.initialPosition}\\,\\mathrm{m}\\).`
     },
     feedback: {
       correctHeading: 'Richtig!',
@@ -147,13 +153,13 @@ const TEXT = {
     },
     solution: {
       summary: 'Musterlösung und Erklärung',
-      positionRelation: 'Im Orts-Zeit-Diagramm entspricht die Steigung der Geschwindigkeit: \\(v=\\frac{\\Delta x}{\\Delta t}\\).',
-      velocityRelation: 'Aus jedem Geschwindigkeitsabschnitt folgt der neue Ort mit \\(x_{i+1}=x_i+v_i\\Delta t_i\\).',
+      positionRelation: 'Im Orts-Zeit-Diagramm entspricht die Steigung der Geschwindigkeit: \\(\\vec{v}=\\frac{\\Delta\\vec{x}}{\\Delta t}\\).',
+      velocityRelation: 'Aus jedem Geschwindigkeitsabschnitt folgt der neue Ort mit \\(\\vec{x}_{i+1}=\\vec{x}_i+\\vec{v}_i\\Delta t_i\\).',
       tableIntro: 'Die Bewegung besteht aus folgenden Abschnitten:',
       interval: 'Zeitintervall',
-      velocity: 'Geschwindigkeit',
-      positionChange: 'Ortsänderung',
-      positions: 'Ort',
+      velocity: 'Geschwindigkeit \\(\\vec{v}\\)',
+      positionChange: 'Ortsänderung \\(\\Delta\\vec{x}\\)',
+      positions: 'Ort \\(\\vec{x}\\)',
       partialDistance: 'Teil​strecke',
       totalDistance: value => `Damit beträgt die insgesamt zurückgelegte Strecke \\(s_{\\mathrm{ges}}=${value}\\,\\mathrm{m}\\).`
     },
@@ -170,6 +176,12 @@ const TEXT = {
     heading: 'Piecewise Uniform Motion',
     languageSelectorAria: 'Language selection',
     introLead: 'Practise the relationship between a written motion description, a position–time graph, and a velocity–time graph.',
+    notation: {
+      title: 'Notation: position, velocity, and speed',
+      vectors: 'We write position as the vector \\(\\vec{x}\\) and velocity as the vector \\(\\vec{v}\\). The speed \\(v=\\lvert\\vec{v}\\rvert\\) is the magnitude or length of the velocity. It has no vector arrow and cannot be negative.',
+      dimensions: 'In one dimension, \\(\\vec{v}\\) and \\(v\\) can both be represented by real numbers: the sign of \\(\\vec{v}\\) specifies the orientation, whereas \\(v\\ge 0\\). In two dimensions, \\(\\vec{v}=(v_x,v_y)\\) is a vector – mathematically, an ordered pair of numbers – and \\(v=\\sqrt{v_x^2+v_y^2}\\) is its length.',
+      descriptions: 'The motion descriptions use both forms: they either state the signed velocity \\(\\vec{v}\\), in which case no orientation is added, or they state the speed \\(v\\), in which case the positive or negative \\(x\\)-orientation is specified.'
+    },
     modeLegend: 'Choose the task type',
     modes: {
       description: {
@@ -219,8 +231,8 @@ const TEXT = {
       aria: (type, editable) => `${type === 'position' ? 'Position–time graph' : 'Velocity–time graph'} with a grid. ${editable ? 'Draw line segments with a pointer or the keyboard.' : 'Given graph.'}`,
       status: (type, point, pending) => {
         const coordinate = type === 'position'
-          ? `x = ${point.value} m`
-          : `v = ${point.value} m/s`;
+          ? `position vector x = ${point.value} m`
+          : `velocity vector v = ${point.value} m/s`;
         return `Snap point: t = ${point.t} s, ${coordinate}${pending ? '; start point selected' : ''}`;
       }
     },
@@ -234,11 +246,11 @@ const TEXT = {
       'velocity-to-position': 'Velocity → position'
     },
     questions: {
-      'text-to-position': () => 'Draw the position–time graph \\(x(t)\\) for the described motion.',
-      'text-to-velocity': () => 'Draw the velocity–time graph \\(v(t)\\) for the described motion.',
-      'text-to-both': () => 'Draw both \\(x(t)\\) and \\(v(t)\\) for the described motion.',
+      'text-to-position': () => 'Draw the position–time graph \\(\\vec{x}(t)\\) for the described motion.',
+      'text-to-velocity': () => 'Draw the velocity–time graph \\(\\vec{v}(t)\\) for the described motion.',
+      'text-to-both': () => 'Draw both \\(\\vec{x}(t)\\) and \\(\\vec{v}(t)\\) for the described motion.',
       'position-to-velocity': () => 'Read the slopes of the given position–time graph and draw the corresponding velocity–time graph.',
-      'velocity-to-position': model => `Draw the position–time graph for the given velocity–time graph. Use \\(x(0)=${model.initialPosition}\\,\\mathrm{m}\\).`
+      'velocity-to-position': model => `Draw the position–time graph for the given velocity–time graph. Use \\(\\vec{x}(0)=${model.initialPosition}\\,\\mathrm{m}\\).`
     },
     feedback: {
       correctHeading: 'Correct!',
@@ -258,13 +270,13 @@ const TEXT = {
     },
     solution: {
       summary: 'Model answer and explanation',
-      positionRelation: 'In the position–time graph, the slope equals the velocity: \\(v=\\frac{\\Delta x}{\\Delta t}\\).',
-      velocityRelation: 'Each velocity section gives the next position through \\(x_{i+1}=x_i+v_i\\Delta t_i\\).',
+      positionRelation: 'In the position–time graph, the slope equals the velocity: \\(\\vec{v}=\\frac{\\Delta\\vec{x}}{\\Delta t}\\).',
+      velocityRelation: 'Each velocity section gives the next position through \\(\\vec{x}_{i+1}=\\vec{x}_i+\\vec{v}_i\\Delta t_i\\).',
       tableIntro: 'The motion consists of these phases:',
       interval: 'Time interval',
-      velocity: 'Velocity',
-      positionChange: 'Position change',
-      positions: 'Position',
+      velocity: 'Velocity \\(\\vec{v}\\)',
+      positionChange: 'Position change \\(\\Delta\\vec{x}\\)',
+      positions: 'Position \\(\\vec{x}\\)',
       partialDistance: 'Partial distance',
       totalDistance: value => `Thus the total distance travelled is \\(s_{\\mathrm{tot}}=${value}\\,\\mathrm{m}\\).`
     },
@@ -281,6 +293,12 @@ const TEXT = {
     heading: 'Mouvement uniforme par morceaux',
     languageSelectorAria: 'Choix de la langue',
     introLead: 'Entraîne-toi à relier une description du mouvement, un graphique position–temps et un graphique vitesse–temps.',
+    notation: {
+      title: 'Notation : position, vitesse et vitesse absolue',
+      vectors: 'Nous écrivons la position comme le vecteur \\(\\vec{x}\\) et la vitesse comme le vecteur \\(\\vec{v}\\). La vitesse absolue, ou célérité, \\(v=\\lvert\\vec{v}\\rvert\\) est la norme ou la longueur de la vitesse. Elle ne porte pas de flèche vectorielle et ne peut pas être négative.',
+      dimensions: 'En une dimension, \\(\\vec{v}\\) et \\(v\\) peuvent être représentées par des nombres réels : le signe de \\(\\vec{v}\\) indique l’orientation, tandis que \\(v\\ge 0\\). En deux dimensions, \\(\\vec{v}=(v_x,v_y)\\) est un vecteur – mathématiquement, un couple ordonné de nombres – et \\(v=\\sqrt{v_x^2+v_y^2}\\) est sa longueur.',
+      descriptions: 'Les descriptions du mouvement utilisent les deux formes : soit elles donnent la vitesse signée \\(\\vec{v}\\), sans ajouter d’orientation, soit elles donnent la vitesse absolue \\(v\\), en précisant alors l’orientation positive ou négative de \\(x\\).'
+    },
     modeLegend: 'Choisis le type d’exercice',
     modes: {
       description: {
@@ -330,8 +348,8 @@ const TEXT = {
       aria: (type, editable) => `${type === 'position' ? 'Graphique position–temps' : 'Graphique vitesse–temps'} avec une grille. ${editable ? 'Trace des segments avec un pointeur ou le clavier.' : 'Graphique donné.'}`,
       status: (type, point, pending) => {
         const coordinate = type === 'position'
-          ? `x = ${point.value} m`
-          : `v = ${point.value} m/s`;
+          ? `vecteur position x = ${point.value} m`
+          : `vecteur vitesse v = ${point.value} m/s`;
         return `Point d’accrochage : t = ${point.t} s, ${coordinate}${pending ? ' ; point de départ sélectionné' : ''}`;
       }
     },
@@ -345,11 +363,11 @@ const TEXT = {
       'velocity-to-position': 'Vitesse → position'
     },
     questions: {
-      'text-to-position': () => 'Trace le graphique position–temps \\(x(t)\\) du mouvement décrit.',
-      'text-to-velocity': () => 'Trace le graphique vitesse–temps \\(v(t)\\) du mouvement décrit.',
-      'text-to-both': () => 'Trace à la fois \\(x(t)\\) et \\(v(t)\\) pour le mouvement décrit.',
+      'text-to-position': () => 'Trace le graphique position–temps \\(\\vec{x}(t)\\) du mouvement décrit.',
+      'text-to-velocity': () => 'Trace le graphique vitesse–temps \\(\\vec{v}(t)\\) du mouvement décrit.',
+      'text-to-both': () => 'Trace à la fois \\(\\vec{x}(t)\\) et \\(\\vec{v}(t)\\) pour le mouvement décrit.',
       'position-to-velocity': () => 'Lis les pentes du graphique position–temps donné et trace le graphique vitesse–temps correspondant.',
-      'velocity-to-position': model => `Trace le graphique position–temps correspondant au graphique vitesse–temps donné. Utilise \\(x(0)=${model.initialPosition}\\,\\mathrm{m}\\).`
+      'velocity-to-position': model => `Trace le graphique position–temps correspondant au graphique vitesse–temps donné. Utilise \\(\\vec{x}(0)=${model.initialPosition}\\,\\mathrm{m}\\).`
     },
     feedback: {
       correctHeading: 'Correct !',
@@ -369,13 +387,13 @@ const TEXT = {
     },
     solution: {
       summary: 'Solution et explication',
-      positionRelation: 'Dans le graphique position–temps, la pente correspond à la vitesse : \\(v=\\frac{\\Delta x}{\\Delta t}\\).',
-      velocityRelation: 'Chaque section de vitesse donne la position suivante par \\(x_{i+1}=x_i+v_i\\Delta t_i\\).',
+      positionRelation: 'Dans le graphique position–temps, la pente correspond à la vitesse : \\(\\vec{v}=\\frac{\\Delta\\vec{x}}{\\Delta t}\\).',
+      velocityRelation: 'Chaque section de vitesse donne la position suivante par \\(\\vec{x}_{i+1}=\\vec{x}_i+\\vec{v}_i\\Delta t_i\\).',
       tableIntro: 'Le mouvement comporte les phases suivantes :',
       interval: 'Intervalle de temps',
-      velocity: 'Vitesse',
-      positionChange: 'Variation de position',
-      positions: 'Position',
+      velocity: 'Vitesse \\(\\vec{v}\\)',
+      positionChange: 'Variation de position \\(\\Delta\\vec{x}\\)',
+      positions: 'Position \\(\\vec{x}\\)',
       partialDistance: 'Distance partielle',
       totalDistance: value => `La distance totale parcourue vaut donc \\(s_{\\mathrm{tot}}=${value}\\,\\mathrm{m}\\).`
     },
@@ -409,6 +427,13 @@ const controls = {
     result: byId('resultScreen')
   },
   introLead: byId('introLead'),
+  notation: {
+    panel: byId('notationNote'),
+    title: byId('notationTitle'),
+    vectors: byId('notationVectors'),
+    dimensions: byId('notationDimensions'),
+    descriptions: byId('notationDescriptions')
+  },
   modeLegend: byId('modeLegend'),
   modeButtons: Array.from(document.querySelectorAll('.mode-choice')),
   modeText: {
@@ -617,6 +642,11 @@ function applyLanguage() {
     button.setAttribute('aria-pressed', String(selected));
   });
   setText(controls.introLead, text.introLead);
+  clearMath([controls.notation.panel]);
+  setText(controls.notation.title, text.notation.title);
+  controls.notation.vectors.innerHTML = text.notation.vectors;
+  controls.notation.dimensions.innerHTML = text.notation.dimensions;
+  controls.notation.descriptions.innerHTML = text.notation.descriptions;
   setText(controls.modeLegend, text.modeLegend);
   for (const [mode, elements] of Object.entries(controls.modeText)) {
     setText(elements.title, text.modes[mode].title);
@@ -652,6 +682,7 @@ function applyLanguage() {
   updateStatus();
   updateTaskLanguage();
   updateResultText();
+  queueTypeset([controls.notation.panel]);
   try {
     sessionStorage.setItem(LANGUAGE_STORAGE_KEY, state.language);
   } catch (error) {
@@ -682,8 +713,8 @@ function graphLabels(graphType, editable) {
   return {
     xAxisHtml: '\\(t\\,/\\,\\mathrm{s}\\)',
     yAxisHtml: graphType === motionCore.GRAPH_TYPES.position
-      ? '\\(x(t)\\,/\\,\\mathrm{m}\\)'
-      : '\\(v(t)\\,/\\,(\\mathrm{m/s})\\)',
+      ? '\\(\\vec{x}(t)\\,/\\,\\mathrm{m}\\)'
+      : '\\(\\vec{v}(t)\\,/\\,(\\mathrm{m/s})\\)',
     ariaLabel: text.diagram.aria(graphType, editable),
     statusFormatter: (point, pending) => text.diagram.status(graphType, point, pending)
   };
@@ -717,7 +748,11 @@ function updateTaskLanguage() {
   setText(controls.taskTypeBadge, currentText().taskBadges[task.type]);
   controls.taskQuestion.innerHTML = taskQuestionText(task);
   if (task.requirements.hasDescription) {
-    controls.motionDescription.innerHTML = motionCore.describeMotion(task.model, state.language)
+    controls.motionDescription.innerHTML = motionCore.describeMotion(
+      task.model,
+      state.language,
+      task.descriptionStyle
+    )
       .map(paragraph => `<p>${paragraph}</p>`)
       .join('');
     controls.motionDescription.classList.remove('hidden');
@@ -959,9 +994,9 @@ function buildSolutionHtml(task) {
     return [
       `<tr>`,
       `<td>\\(${phase.startTime}\\,\\mathrm{s}\\)–\\(${phase.endTime}\\,\\mathrm{s}\\)</td>`,
-      `<td>\\(${signedLatex(phase.velocity)}\\,\\mathrm{m/s}\\)</td>`,
-      `<td>\\(\\Delta x=${signedLatex(delta)}\\,\\mathrm{m}\\)</td>`,
-      `<td>\\(${phase.startPosition}\\,\\mathrm{m}\\to ${phase.endPosition}\\,\\mathrm{m}\\)</td>`,
+      `<td>\\(\\vec{v}=${signedLatex(phase.velocity)}\\,\\mathrm{m/s}\\)</td>`,
+      `<td>\\(\\Delta\\vec{x}=${signedLatex(delta)}\\,\\mathrm{m}\\)</td>`,
+      `<td>\\(\\vec{x}: ${phase.startPosition}\\,\\mathrm{m}\\to ${phase.endPosition}\\,\\mathrm{m}\\)</td>`,
       `<td>\\(${phase.distance}\\,\\mathrm{m}\\)</td>`,
       `</tr>`
     ].join('');

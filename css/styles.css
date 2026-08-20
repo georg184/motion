@@ -126,10 +126,34 @@ p {
 
 .intro-lead {
   max-width: 760px;
-  margin: 0 auto 28px;
+  margin: 0 auto 22px;
   color: var(--muted);
   text-align: center;
   font-size: 1.06rem;
+}
+
+.notation-note {
+  max-width: 860px;
+  margin: 0 auto 28px;
+  padding: 18px 20px;
+  border: 1px solid #b9c9e8;
+  border-left: 5px solid var(--primary);
+  border-radius: 14px;
+  background: #f5f8ff;
+}
+
+.notation-note h2 {
+  margin: 0 0 10px;
+  font-size: 1.08rem;
+  line-height: 1.35;
+}
+
+.notation-note p {
+  margin-bottom: 10px;
+}
+
+.notation-note p:last-child {
+  margin-bottom: 0;
 }
 
 .option-fieldset {

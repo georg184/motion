@@ -50,6 +50,10 @@ for (const language of ['de', 'en', 'fr']) {
 const fallbackChecks = [
   translations.de.heading,
   translations.de.introLead,
+  translations.de.notation.title,
+  translations.de.notation.vectors,
+  translations.de.notation.dimensions,
+  translations.de.notation.descriptions,
   translations.de.modes.description.title,
   translations.de.modes.positionToVelocity.title,
   translations.de.modes.velocityToPosition.title,
@@ -69,13 +73,31 @@ const model = core.createMotionModel(0, [
   { duration: 4, velocity: -1 }
 ]);
 const descriptionWords = {
-  de: ['befindet sich', 'bleibt'],
-  en: ['object is at', 'remains'],
-  fr: ['se trouve', 'reste']
+  de: ['befindet sich', 'bleibt', 'Absolutgeschwindigkeit', 'Orientierung'],
+  en: ['object is at', 'remains', 'constant speed', 'orientation'],
+  fr: ['se trouve', 'reste', 'vitesse absolue', 'orientation']
 };
 for (const language of ['de', 'en', 'fr']) {
-  const description = core.describeMotion(model, language).join(' ');
+  const paragraphs = core.describeMotion(
+    model,
+    language,
+    core.DESCRIPTION_STYLES.signedVelocity
+  );
+  const description = paragraphs.join(' ');
   for (const word of descriptionWords[language]) assert.ok(description.includes(word));
+  assert.ok(paragraphs[0].includes('\\vec{x}(0)'));
+  assert.ok(paragraphs[1].includes('\\vec{v}=+1'));
+  assert.ok(paragraphs[2].includes('\\vec{v}=0'));
+  assert.ok(paragraphs[3].includes('\\(v=1'));
+  assert.ok(!paragraphs[3].includes('\\vec{v}'));
+
+  const reversed = core.describeMotion(
+    model,
+    language,
+    core.DESCRIPTION_STYLES.absoluteSpeed
+  );
+  assert.ok(reversed[1].includes('\\(v=1'));
+  assert.ok(reversed[3].includes('\\vec{v}=-1'));
 }
 
 console.log('German, English, and French translation shapes and static fallbacks verified.');

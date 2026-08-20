@@ -9,7 +9,7 @@
     root.GGMotionCore = api;
   }
 })(typeof globalThis !== 'undefined' ? globalThis : this, function() {
-  const VERSION = '20260819.3';
+  const VERSION = '20260820.1';
   const EPSILON = 1e-9;
 
   const GRAPH_TYPES = Object.freeze({
@@ -36,6 +36,11 @@
     position: 'position',
     velocity: 'velocity',
     both: 'both'
+  });
+
+  const DESCRIPTION_STYLES = Object.freeze({
+    signedVelocity: 'signed-velocity',
+    absoluteSpeed: 'absolute-speed'
   });
 
   const DIFFICULTIES = Object.freeze({
@@ -311,17 +316,19 @@
     }
   }
 
-  function createTask(taskType, difficulty, distanceRequired, random, index) {
+  function createTask(taskType, difficulty, distanceRequired, random, index, descriptionStyle) {
     if (!ALL_TASK_TYPES.includes(taskType)) {
       throw new RangeError(`Unknown task type: ${taskType}`);
     }
     const model = generateMotion(difficulty, random);
+    const requirements = taskRequirements(taskType);
     return deepFreeze({
       id: `motion-${index + 1}`,
       type: taskType,
       difficulty,
       distanceRequired: Boolean(distanceRequired),
-      requirements: taskRequirements(taskType),
+      requirements,
+      descriptionStyle: requirements.hasDescription ? descriptionStyle : null,
       model
     });
   }
@@ -372,13 +379,22 @@
       ...Array(count / 2).fill(false)
     ], random);
 
-    return deepFreeze(taskTypes.map((taskType, index) => createTask(
-      taskType,
-      options.difficulty,
-      distanceFlags[index],
-      random,
-      index
-    )));
+    let descriptionIndex = 0;
+    return deepFreeze(taskTypes.map((taskType, index) => {
+      const hasDescription = taskRequirements(taskType).hasDescription;
+      const descriptionStyle = descriptionIndex % 2 === 0
+        ? DESCRIPTION_STYLES.signedVelocity
+        : DESCRIPTION_STYLES.absoluteSpeed;
+      if (hasDescription) descriptionIndex += 1;
+      return createTask(
+        taskType,
+        options.difficulty,
+        distanceFlags[index],
+        random,
+        index,
+        descriptionStyle
+      );
+    }));
   }
 
   function segmentCoordinates(segment) {
@@ -559,33 +575,51 @@
     return Number.isInteger(value) ? String(value) : String(value).replace('.', '{,}');
   }
 
-  function describeMotion(model, language) {
+  function describeMotion(model, language, firstDescriptionStyle) {
     const lang = SUPPORTED_LANGUAGES.includes(language) ? language : 'de';
+    const startingStyle = Object.values(DESCRIPTION_STYLES).includes(firstDescriptionStyle)
+      ? firstDescriptionStyle
+      : DESCRIPTION_STYLES.signedVelocity;
     const x0 = latexNumber(model.initialPosition);
     const intro = {
-      de: `Bei \\(t=0\\,\\mathrm{s}\\) befindet sich der Körper am Ort \\(x=${x0}\\,\\mathrm{m}\\).`,
-      en: `At \\(t=0\\,\\mathrm{s}\\), the object is at position \\(x=${x0}\\,\\mathrm{m}\\).`,
-      fr: `À \\(t=0\\,\\mathrm{s}\\), le corps se trouve à la position \\(x=${x0}\\,\\mathrm{m}\\).`
+      de: `Bei \\(t=0\\,\\mathrm{s}\\) befindet sich der Körper am Ort \\(\\vec{x}(0)=${x0}\\,\\mathrm{m}\\).`,
+      en: `At \\(t=0\\,\\mathrm{s}\\), the object is at position \\(\\vec{x}(0)=${x0}\\,\\mathrm{m}\\).`,
+      fr: `À \\(t=0\\,\\mathrm{s}\\), le corps se trouve à la position \\(\\vec{x}(0)=${x0}\\,\\mathrm{m}\\).`
     }[lang];
 
+    let movingPhaseIndex = 0;
     const phaseTexts = model.phases.map(phase => {
       const start = latexNumber(phase.startTime);
       const end = latexNumber(phase.endTime);
-      const velocity = latexNumber(phase.velocity);
       if (phase.velocity === 0) {
         return {
-          de: `Von \\(t=${start}\\,\\mathrm{s}\\) bis \\(t=${end}\\,\\mathrm{s}\\) bleibt der Körper am selben Ort.`,
-          en: `From \\(t=${start}\\,\\mathrm{s}\\) to \\(t=${end}\\,\\mathrm{s}\\), the object remains at rest.`,
-          fr: `De \\(t=${start}\\,\\mathrm{s}\\) à \\(t=${end}\\,\\mathrm{s}\\), le corps reste immobile.`
+          de: `Von \\(t=${start}\\,\\mathrm{s}\\) bis \\(t=${end}\\,\\mathrm{s}\\) bleibt der Körper am selben Ort; seine Geschwindigkeit ist \\(\\vec{v}=0\\,\\mathrm{m/s}\\).`,
+          en: `From \\(t=${start}\\,\\mathrm{s}\\) to \\(t=${end}\\,\\mathrm{s}\\), the object remains at rest; its velocity is \\(\\vec{v}=0\\,\\mathrm{m/s}\\).`,
+          fr: `De \\(t=${start}\\,\\mathrm{s}\\) à \\(t=${end}\\,\\mathrm{s}\\), le corps reste immobile ; sa vitesse est \\(\\vec{v}=0\\,\\mathrm{m/s}\\).`
         }[lang];
       }
-      const direction = phase.velocity > 0
-        ? { de: 'positiver', en: 'positive', fr: 'positif' }[lang]
-        : { de: 'negativer', en: 'negative', fr: 'négatif' }[lang];
+      const useSignedVelocity = movingPhaseIndex % 2 === 0
+        ? startingStyle === DESCRIPTION_STYLES.signedVelocity
+        : startingStyle === DESCRIPTION_STYLES.absoluteSpeed;
+      movingPhaseIndex += 1;
+      if (useSignedVelocity) {
+        const velocity = phase.velocity > 0
+          ? `+${latexNumber(phase.velocity)}`
+          : latexNumber(phase.velocity);
+        return {
+          de: `Von \\(t=${start}\\,\\mathrm{s}\\) bis \\(t=${end}\\,\\mathrm{s}\\) bewegt er sich mit der konstanten Geschwindigkeit \\(\\vec{v}=${velocity}\\,\\mathrm{m/s}\\).`,
+          en: `From \\(t=${start}\\,\\mathrm{s}\\) to \\(t=${end}\\,\\mathrm{s}\\), it moves with the constant velocity \\(\\vec{v}=${velocity}\\,\\mathrm{m/s}\\).`,
+          fr: `De \\(t=${start}\\,\\mathrm{s}\\) à \\(t=${end}\\,\\mathrm{s}\\), il se déplace avec la vitesse constante \\(\\vec{v}=${velocity}\\,\\mathrm{m/s}\\).`
+        }[lang];
+      }
+      const speed = latexNumber(Math.abs(phase.velocity));
+      const orientation = phase.velocity > 0
+        ? { de: 'positiver', en: 'positive', fr: 'positive' }[lang]
+        : { de: 'negativer', en: 'negative', fr: 'négative' }[lang];
       return {
-        de: `Von \\(t=${start}\\,\\mathrm{s}\\) bis \\(t=${end}\\,\\mathrm{s}\\) bewegt er sich mit der konstanten Geschwindigkeit \\(v=${velocity}\\,\\mathrm{m/s}\\) in ${direction} \\(x\\)-Richtung.`,
-        en: `From \\(t=${start}\\,\\mathrm{s}\\) to \\(t=${end}\\,\\mathrm{s}\\), it moves at the constant velocity \\(v=${velocity}\\,\\mathrm{m/s}\\) in the ${direction} \\(x\\)-direction.`,
-        fr: `De \\(t=${start}\\,\\mathrm{s}\\) à \\(t=${end}\\,\\mathrm{s}\\), il se déplace à la vitesse constante \\(v=${velocity}\\,\\mathrm{m/s}\\) dans le sens ${direction} de l’axe \\(x\\).`
+        de: `Von \\(t=${start}\\,\\mathrm{s}\\) bis \\(t=${end}\\,\\mathrm{s}\\) bewegt er sich mit der konstanten Absolutgeschwindigkeit \\(v=${speed}\\,\\mathrm{m/s}\\) in ${orientation} \\(x\\)-Orientierung.`,
+        en: `From \\(t=${start}\\,\\mathrm{s}\\) to \\(t=${end}\\,\\mathrm{s}\\), it moves with the constant speed \\(v=${speed}\\,\\mathrm{m/s}\\) in the ${orientation} \\(x\\)-orientation.`,
+        fr: `De \\(t=${start}\\,\\mathrm{s}\\) à \\(t=${end}\\,\\mathrm{s}\\), il se déplace avec la vitesse absolue constante \\(v=${speed}\\,\\mathrm{m/s}\\) selon l’orientation ${orientation} de \\(x\\).`
       }[lang];
     });
     return [intro, ...phaseTexts];
@@ -597,6 +631,7 @@
     TASK_TYPES,
     QUIZ_MODES,
     DESCRIPTION_TARGETS,
+    DESCRIPTION_STYLES,
     DIFFICULTIES,
     GRID,
     ALL_TASK_TYPES,

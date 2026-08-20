@@ -8,16 +8,17 @@ Live app: <https://georg184.github.io/motion/>
 
 ## Learning Model
 
-The app distinguishes three physical quantities:
+The app distinguishes four physical quantities and notations:
 
-- `x(t)`: signed position in metres; it may increase, decrease, or remain constant
-- `v(t)`: signed velocity in metres per second; it is constant within each phase and may jump between phases
+- \(\vec{x}(t)\): signed position vector in metres; it may increase, decrease, or remain constant
+- \(\vec{v}(t)\): signed velocity vector in metres per second; it is constant within each phase and may jump between phases
+- \(v(t)=\lvert\vec{v}(t)\rvert\): speed (absolute velocity), which has no vector arrow and is never negative
 - `s_total`: total distance travelled in metres; it is the sum of the absolute phase displacements
 
 Every task comes from one canonical motion model with an initial position and consecutive constant-velocity phases. The model derives the written description, both graphs, the exact answer contract, and
 
 \[
-s_{\mathrm{total}}=\sum_i |v_i|\,\Delta t_i.
+s_{\mathrm{total}}=\sum_i \lvert\vec{v}_i\rvert\,\Delta t_i.
 \]
 
 A full distance–time graph is intentionally outside the first version. The model retains enough information to add it later.
@@ -26,11 +27,11 @@ A full distance–time graph is intentionally outside the first version. The mod
 
 The five internal task types are:
 
-1. written description to `x(t)`
-2. written description to `v(t)`
+1. written description to \(\vec{x}(t)\)
+2. written description to \(\vec{v}(t)\)
 3. written description to both graphs
-4. given `x(t)` to `v(t)`
-5. given `v(t)` and `x(0)` to `x(t)`
+4. given \(\vec{x}(t)\) to \(\vec{v}(t)\)
+5. given \(\vec{v}(t)\) and \(\vec{x}(0)\) to \(\vec{x}(t)\)
 
 The start screen groups these into description, position-to-velocity, velocity-to-position, and mixed modes. A mixed ten-question round contains every internal task type exactly twice.
 
@@ -46,8 +47,24 @@ Both supported difficulties use the fixed grids
 
 All interval boundaries, velocities, and initial positions are integers. The generator rejects trajectories that leave the visible position range and never creates adjacent phases with the same velocity.
 
-- **Basic**: two phases, `x(0) = 0`, and velocities from `-2` through `2 m/s`
+- **Basic**: two phases, \(\vec{x}(0)=0\), and velocities from `-2` through `2 m/s`
 - **Standard**: three phases, an initial position from `-4` through `4 m`, and velocities from `-3` through `3 m/s`
+
+## Description Contract
+
+The start screen explains the distinction between signed velocity
+\(\vec{v}\) and speed \(v=\lvert\vec{v}\rvert\), both in one dimension and
+for a two-dimensional vector \(\vec{v}=(v_x,v_y)\).
+
+Generated motion descriptions alternate systematically between two equivalent
+forms:
+
+- a signed velocity such as \(\vec{v}=-3\,\mathrm{m/s}\), without a separate orientation statement
+- a non-negative speed such as \(v=3\,\mathrm{m/s}\), together with the positive or negative \(x\)-orientation
+
+Successive moving phases alternate between these forms. Description tasks also
+alternate which form comes first, so both conventions occur even when a model
+contains only one moving phase.
 
 ## Drawing Contract
 
@@ -63,7 +80,7 @@ The editor stores exact snapped coordinates rather than pointer pixels. The answ
 - There is no geometric answer tolerance after snapping.
 - Open and closed endpoint markers at velocity jumps are not assessed; the interval interiors determine the physical motion.
 
-Editable position graphs show the given initial point `(0, x(0))`. Given and answer diagrams use identical time scales and are stacked vertically so corresponding times align.
+Editable position graphs show the given initial point \((0,\vec{x}(0))\). Given and answer diagrams use identical time scales and are stacked vertically so corresponding times align.
 
 ## Quiz Flow
 
@@ -104,11 +121,11 @@ The selected language is stored in `sessionStorage` and remains shared across al
 - `scripts/verify-localization.js`: translation-shape, generated-description, and German fallback checks
 - `scripts/verify-static-contract.js`: cache, MathJax, SVG interaction, workflow, and integration checks
 - `scripts/browser-smoke.html` and `scripts/browser-smoke.js`: local real-browser interaction harness
-- `.github/workflows/deploy-pages.yml`: validation and future GitHub Pages deployment
+- `.github/workflows/deploy-pages.yml`: validation and GitHub Pages deployment
 
 ## Cache And Version Safety
 
-Current application version: `20260819.3`.
+Current application version: `20260820.1`.
 
 The same version must appear in:
 
