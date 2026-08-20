@@ -104,6 +104,8 @@ assert.match(appSource, /A velocity jump is not connected by a vertical line/);
 assert.match(appSource, /Un saut de vitesse n’est pas relié par une ligne verticale/);
 assert.match(appSource, /Im Eindimensionalen lassen sich/);
 assert.match(appSource, /Im Zweidimensionalen ist/);
+assert.ok(indexSource.includes('\\begin{pmatrix}v_x\\\\v_y\\end{pmatrix}'));
+assert.match(indexSource, /mathematisch ein geordnetes Zahlenpaar/);
 assert.match(appSource, /Die Texte zur Beschreibung der Bewegung verwenden beide Formen/);
 assert.doesNotMatch(indexSource + appSource, /Bewegungstexte/);
 assert.ok(indexSource.includes('\\(v=\\lvert\\vec{v}\\rvert\\)'));

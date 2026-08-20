@@ -9,7 +9,7 @@
     root.GGMotionCore = api;
   }
 })(typeof globalThis !== 'undefined' ? globalThis : this, function() {
-  const VERSION = '20260820.2';
+  const VERSION = '20260820.3';
   const EPSILON = 1e-9;
 
   const GRAPH_TYPES = Object.freeze({

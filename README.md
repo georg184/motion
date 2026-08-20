@@ -54,8 +54,10 @@ All interval boundaries, velocities, and initial positions are integers. The gen
 
 The start screen explains the distinction between signed velocity
 \(\vec{v}\) and speed \(v=\lvert\vec{v}\rvert\) in the one-dimensional case.
-The comparison with a two-dimensional vector \(\vec{v}=(v_x,v_y)\) appears in
-an accessible footnote tooltip that opens by hover, keyboard focus, or tap.
+The comparison with a two-dimensional column vector
+\(\vec{v}=\begin{pmatrix}v_x\\v_y\end{pmatrix}\) appears in an accessible
+footnote tooltip that opens by hover, keyboard focus, or tap. It remains
+described algebraically as an ordered pair of numbers.
 
 Generated motion descriptions alternate systematically between two equivalent
 forms:
@@ -126,7 +128,7 @@ The selected language is stored in `sessionStorage` and remains shared across al
 
 ## Cache And Version Safety
 
-Current application version: `20260820.2`.
+Current application version: `20260820.3`.
 
 The same version must appear in:
 

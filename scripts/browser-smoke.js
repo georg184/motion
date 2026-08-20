@@ -56,7 +56,7 @@
       notationMath: appDocument.querySelectorAll('#notationNote mjx-container').length
     };
     assert(report.intro.language === 'de', 'The app did not start in German.');
-    assert(report.intro.version === '20260820.2', 'The browser loaded the wrong app version.');
+    assert(report.intro.version === '20260820.3', 'The browser loaded the wrong app version.');
     assert(report.intro.visible, 'The intro screen is not visible.');
     assert(!report.intro.overflow, 'The desktop intro has horizontal overflow.');
     assert(report.intro.notationMath >= 8, 'The intro notation was not rendered by MathJax.');
@@ -72,6 +72,7 @@
       open: appDocument.getElementById('dimensionFootnote').classList.contains('is-open'),
       role: footnoteTooltip.getAttribute('role'),
       describedBy: footnoteTrigger.getAttribute('aria-describedby'),
+      hasColumnVector: Boolean(footnoteTooltip.querySelector('mjx-mtable')),
       text: footnoteTooltip.textContent.trim()
     };
     assert(report.intro.footnote.open, 'The dimension footnote did not open.');
@@ -80,6 +81,7 @@
       report.intro.footnote.describedBy === 'dimensionFootnoteTooltip',
       'The footnote trigger is not linked to its tooltip.'
     );
+    assert(report.intro.footnote.hasColumnVector, 'The tooltip vector is not a column vector.');
     assert(
       report.intro.footnote.text.includes('Im Zweidimensionalen'),
       'The German two-dimensional note is missing.'

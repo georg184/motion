@@ -47,6 +47,17 @@ for (const language of ['de', 'en', 'fr']) {
   assert.equal(typeof translations[language].feedback.distanceWrong, 'function');
 }
 
+const orderedPairTerms = {
+  de: 'geordnetes Zahlenpaar',
+  en: 'ordered pair of numbers',
+  fr: 'couple ordonné de nombres'
+};
+for (const language of ['de', 'en', 'fr']) {
+  const twoDimensions = translations[language].notation.twoDimensions;
+  assert.ok(twoDimensions.includes('\\begin{pmatrix}v_x\\\\v_y\\end{pmatrix}'));
+  assert.ok(twoDimensions.includes(orderedPairTerms[language]));
+}
+
 const fallbackChecks = [
   translations.de.heading,
   translations.de.introLead,

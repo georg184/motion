@@ -1,6 +1,6 @@
 'use strict';
 
-const APP_VERSION = '20260820.2';
+const APP_VERSION = '20260820.3';
 const QUESTIONS_PER_ROUND = 10;
 const TIMER_UPDATE_INTERVAL_MS = 250;
 const LANGUAGE_STORAGE_KEY = 'motion-language';
@@ -63,7 +63,7 @@ const TEXT = {
       title: 'Notation: Ort, Geschwindigkeit und Absolutgeschwindigkeit',
       vectors: 'Den Ort schreiben wir als Vektor \\(\\vec{x}\\), die Geschwindigkeit als Vektor \\(\\vec{v}\\). Die Absolutgeschwindigkeit \\(v=\\lvert\\vec{v}\\rvert\\) ist der Betrag beziehungsweise die Länge der Geschwindigkeit. Sie hat kein Vektorsymbol und kann nicht negativ sein.',
       oneDimension: 'Im Eindimensionalen lassen sich \\(\\vec{v}\\) und \\(v\\) durch reelle Zahlen darstellen: Das Vorzeichen von \\(\\vec{v}\\) gibt die Orientierung an, während \\(v\\ge 0\\) gilt.',
-      twoDimensions: 'Im Zweidimensionalen ist \\(\\vec{v}=(v_x,v_y)\\) ein Vektor – mathematisch ein geordnetes Zahlenpaar – und \\(v=\\sqrt{v_x^2+v_y^2}\\) seine Länge.',
+      twoDimensions: 'Im Zweidimensionalen ist \\(\\vec{v}=\\begin{pmatrix}v_x\\\\v_y\\end{pmatrix}\\) ein Vektor – mathematisch ein geordnetes Zahlenpaar – und \\(v=\\sqrt{v_x^2+v_y^2}\\) seine Länge.',
       footnoteAria: 'Fußnote 1: Hinweis zum Zweidimensionalen',
       descriptions: 'Die Texte zur Beschreibung der Bewegung verwenden beide Formen: Entweder steht dort die vorzeichenbehaftete Geschwindigkeit \\(\\vec{v}\\); dann wird keine Orientierung zusätzlich genannt. Oder es steht dort die Absolutgeschwindigkeit \\(v\\); dann wird die positive oder negative \\(x\\)-Orientierung angegeben.'
     },
@@ -182,7 +182,7 @@ const TEXT = {
       title: 'Notation: position, velocity, and speed',
       vectors: 'We write position as the vector \\(\\vec{x}\\) and velocity as the vector \\(\\vec{v}\\). The speed \\(v=\\lvert\\vec{v}\\rvert\\) is the magnitude or length of the velocity. It has no vector arrow and cannot be negative.',
       oneDimension: 'In the one-dimensional case, \\(\\vec{v}\\) and \\(v\\) can both be represented by real numbers: the sign of \\(\\vec{v}\\) specifies the orientation, whereas \\(v\\ge 0\\).',
-      twoDimensions: 'In the two-dimensional case, \\(\\vec{v}=(v_x,v_y)\\) is a vector – mathematically, an ordered pair of numbers – and \\(v=\\sqrt{v_x^2+v_y^2}\\) is its length.',
+      twoDimensions: 'In the two-dimensional case, \\(\\vec{v}=\\begin{pmatrix}v_x\\\\v_y\\end{pmatrix}\\) is a vector – mathematically, an ordered pair of numbers – and \\(v=\\sqrt{v_x^2+v_y^2}\\) is its length.',
       footnoteAria: 'Footnote 1: note on the two-dimensional case',
       descriptions: 'The texts describing the motion use both forms: they either state the signed velocity \\(\\vec{v}\\), in which case no orientation is added, or they state the speed \\(v\\), in which case the positive or negative \\(x\\)-orientation is specified.'
     },
@@ -301,7 +301,7 @@ const TEXT = {
       title: 'Notation : position, vitesse et vitesse absolue',
       vectors: 'Nous écrivons la position comme le vecteur \\(\\vec{x}\\) et la vitesse comme le vecteur \\(\\vec{v}\\). La vitesse absolue, ou célérité, \\(v=\\lvert\\vec{v}\\rvert\\) est la norme ou la longueur de la vitesse. Elle ne porte pas de flèche vectorielle et ne peut pas être négative.',
       oneDimension: 'Dans le cas unidimensionnel, \\(\\vec{v}\\) et \\(v\\) peuvent être représentées par des nombres réels : le signe de \\(\\vec{v}\\) indique l’orientation, tandis que \\(v\\ge 0\\).',
-      twoDimensions: 'Dans le cas bidimensionnel, \\(\\vec{v}=(v_x,v_y)\\) est un vecteur – mathématiquement, un couple ordonné de nombres – et \\(v=\\sqrt{v_x^2+v_y^2}\\) est sa longueur.',
+      twoDimensions: 'Dans le cas bidimensionnel, \\(\\vec{v}=\\begin{pmatrix}v_x\\\\v_y\\end{pmatrix}\\) est un vecteur – mathématiquement, un couple ordonné de nombres – et \\(v=\\sqrt{v_x^2+v_y^2}\\) est sa longueur.',
       footnoteAria: 'Note 1 : remarque sur le cas bidimensionnel',
       descriptions: 'Les textes décrivant le mouvement utilisent les deux formes : soit ils donnent la vitesse signée \\(\\vec{v}\\), sans ajouter d’orientation, soit ils donnent la vitesse absolue \\(v\\), en précisant alors l’orientation positive ou négative de \\(x\\).'
     },
